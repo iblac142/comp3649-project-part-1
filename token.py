@@ -21,7 +21,7 @@ DIV = 3
 # value: is used based on the sort of tag;
 # OPERATION (0): value is an int from 0-3 representing one of ADD, SUB, MUL, or DIV
 # NUMBER (1):    value is an int representing what integer it is
-# VARIABLE (2):  value is an int representing which variable it is
+# VARIABLE (2):  value is a string representing which variable it is
 # TEMP (3):      value is an int representing which temporary variable it is
 # EQUALS (4):    value is not used
 # LIVE (5):      value is not used
@@ -33,3 +33,4 @@ class token:
     def __init__(self, tag, value=None):
         self.tag = tag
         self.value = value
+
