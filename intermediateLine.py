@@ -22,6 +22,7 @@ import token
 
 #todo:
 # error checking
+#   completed multi digit
 #   check liveness/lines
 #   check equals sign
 #   check unary
@@ -79,7 +80,7 @@ def checkVar(line):
     elif (temp.isnumeric()):
         i = 1   #start after temp
         while (i < len(line) and line[i].isnumeric()):
-            temp.append(line[i])
+            temp = temp + line[i]
             i += 1
         var = token.token(1, temp)
         i -= 1
