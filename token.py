@@ -30,8 +30,10 @@ DIV = 3
 # the class has no additional methods and is only used to store information
 class token:
     # class 
-    def __init__(self, tag, value=None):
+    def __init__(self, tag, value):
         self.tag = tag
         self.value = value
 
-    
+    def printToken(self):
+        print (self.tag) 
+        print (self.value) 

@@ -8,7 +8,12 @@ file.close()
 content = content.splitlines()
 liveness = content.pop()
 #liveness error
+tokenizedContent = []
 for line in content:
+    temp = intermediateLine.formLine(line)
+    temp.printTokenizedLine()
+    print ()
+    tokenizedContent.append(temp)
     
 
 print (content)
