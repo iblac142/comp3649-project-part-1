@@ -37,3 +37,9 @@ class token:
     def printToken(self):
         print (self.tag) 
         print (self.value) 
+        
+    def getTag(self):
+        return self.tag
+        
+    def getValue(self):
+        return self.value

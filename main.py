@@ -1,4 +1,5 @@
 import intermediateLine
+import livenessAnalysis
 
 #need to implement input
 file = open("test.txt")
@@ -16,5 +17,9 @@ for line in content:
     tokenizedContent.append(temp)
     
 
-print (content)
-print (liveness)
+#print (content)
+livenessAnalysis.setLiveness(tokenizedContent)
+
+for l in tokenizedContent:
+    print(l.printLiveness())
+#print (liveness)

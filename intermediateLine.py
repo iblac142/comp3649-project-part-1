@@ -37,6 +37,7 @@ class intermediateLine:
         self.src1 = src1
         self.op = op
         self.src2 = src2
+        self.liveness = set()
     
     def printIntermediateLine(self):
         print (self.dst) 
@@ -49,7 +50,22 @@ class intermediateLine:
         self.src1.printToken()
         self.op.printToken()
         self.src2.printToken()
+        
+    def getSRC1(self):
+        return self.src1
 
+    def getSRC2(self):
+        return self.src2
+
+    def getDST(self):
+        return self.dst
+        
+    def printLiveness (self):
+        for i in self.liveness:
+            print(i.getValue());
+        print(",")
+
+  
 
 # takes in a line and creates corresponding intermediateLine
 # After each process each processed segment will be sliced out
@@ -99,3 +115,4 @@ def checkOP(line):
         case "/":
             op = token.token(0, 3)
     return op, line[1:]
+
