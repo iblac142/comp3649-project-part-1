@@ -1,25 +1,32 @@
 import intermediateLine
 import livenessAnalysis
 
-#need to implement input
-file = open("test.txt")
-content = file.read()
-file.close()
+def main():
+    #need to implement input
+    file = open("test.txt")
+    content = file.read()
+    file.close()
+    content = content.splitlines()
 
-content = content.splitlines()
-liveness = content.pop()
-#liveness error
-tokenizedContent = []
-for line in content:
-    temp = intermediateLine.formLine(line)
-    temp.printTokenizedLine()
-    print ()
-    tokenizedContent.append(temp)
-    
+    liveness = content.pop()
+    livenessCheck = liveness[:5]
+    liveness = liveness[5:]
+    if (livenessCheck != "live:"):
+        print ("Error: Last line is not in form live: 'var'")
+        return
+    liveness = liveness.replace(" ", "")
+    liveness = liveness.split(',')
 
-#print (content)
-livenessAnalysis.setLiveness(tokenizedContent)
+    tokenizedContent = []
+    for line in content:
+        temp = intermediateLine.formLine(line)
+        temp.printTokenizedLine()
+        print ()
+        tokenizedContent.append(temp)
+        
+    livenessAnalysis.setLiveness(tokenizedContent)
 
-for l in tokenizedContent:
-    print(l.printLiveness())
-#print (liveness)
+    for l in tokenizedContent:
+        print(l.printLiveness())
+
+main()
