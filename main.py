@@ -1,5 +1,7 @@
 import intermediateLine
 import livenessAnalysis
+import interference
+import graphColor
 
 def main():
     #need to implement input
@@ -26,8 +28,12 @@ def main():
         temp = intermediateLine.formLine(line)
         tokenizedContent.append(temp)
         
-    livenessAnalysis.setLiveness(tokenizedContent)
+    varSet = list(livenessAnalysis.setLiveness(tokenizedContent, liveness))
+    intGraph = interference.createInterferenceGraph(tokenizedContent, varSet)
+    intGraph.displayAdjacencies()
 
-#   for l in tokenizedContent:
-#        print(l.printLiveness())
+    colored = graphColor.graphColor(len(varSet), 3, intGraph)
+    done = colored.solve()
+    print(done)
+    print(colored.variableColors)
 main()

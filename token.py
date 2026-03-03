@@ -33,6 +33,12 @@ class token:
     def __init__(self, tag, value):
         self.tag = tag
         self.value = value
+        
+    def __eq__ (self, other):
+        return (self.tag, self.value) == (other.tag, other.value)
+        
+    def __hash__ (self):
+        return hash((self.tag, self.value))
 
     def printToken(self):
         print (self.tag) 
