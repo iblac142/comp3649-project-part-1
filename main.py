@@ -15,18 +15,19 @@ def main():
         print ("Error: Last line is not in form live: 'var'")
         return
     liveness = liveness.replace(" ", "")
-    liveness = liveness.split(',')
+    operation = liveness.split(',')
+    liveness = []
+    for var in operation:
+        token, empty = intermediateLine.checkVar(var)
+        liveness.append(token)
 
     tokenizedContent = []
     for line in content:
         temp = intermediateLine.formLine(line)
-        temp.printTokenizedLine()
-        print ()
         tokenizedContent.append(temp)
         
     livenessAnalysis.setLiveness(tokenizedContent)
 
-    for l in tokenizedContent:
-        print(l.printLiveness())
-
+#   for l in tokenizedContent:
+#        print(l.printLiveness())
 main()

@@ -62,7 +62,7 @@ class intermediateLine:
         
     def printLiveness (self):
         for i in self.liveness:
-            print(i.getValue());
+            print(i.getValue())
         print(",")
 
   
@@ -115,4 +115,3 @@ def checkOP(line):
         case "/":
             op = token.token(0, 3)
     return op, line[1:]
-
