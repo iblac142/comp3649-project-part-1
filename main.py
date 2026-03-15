@@ -9,11 +9,11 @@ def main():
     # QUICK FIX: allow filename and reg count from command line
     # usage: python main.py <filename> <num_regs>
     if len(sys.argv) < 3:
-        print("Usage: python main.py <filename> <num_regs>")
+        print("Usage: python main.py <num_regs> <filename>")
         return
 
-    filename = sys.argv[1]
-    numRegs = int(sys.argv[2])
+    numRegs = int(sys.argv[1])
+    filename = sys.argv[2]
 
     file = open(filename)
     content = file.read()
@@ -21,25 +21,19 @@ def main():
     content = content.splitlines()
 
     liveness = content.pop()
-    livenessCheck = liveness[:5]
-    liveness = liveness[5:]
-    if (livenessCheck != "live:"):
-        print ("Error: Last line is not in form live: 'var'")
-        return
+    liveVar = livenessAnalysis.liveness_check(liveness)
 
-    liveness = liveness.replace(" ", "")
-    operation = liveness.split(',')
-    liveness = []
-    for var in operation:
-        t, empty = intermediateLine.checkVar(var)
-        liveness.append(t)
+    if (liveVar == 0):
+        return
 
     tokenizedContent = []
     for line in content:
         temp = intermediateLine.formLine(line)
+        if (temp == 0):
+            return
         tokenizedContent.append(temp)
 
-    varSet = list(livenessAnalysis.setLiveness(tokenizedContent, liveness))
+    varSet = list(livenessAnalysis.setLiveness(tokenizedContent, liveVar))
     intGraph = interference.createInterferenceGraph(tokenizedContent, varSet)
 
     # print interference table

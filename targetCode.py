@@ -1,5 +1,5 @@
 # targetCode.py
-import token as tokmod
+import tokenizing as tokmod
 
 # Map token OPERATION values to assembly mnemonics
 OP_TO_MNEMONIC = {

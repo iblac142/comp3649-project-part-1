@@ -1,4 +1,4 @@
-import token
+import tokenizing
 
 # Class for building intermediate representation
 # expected input
@@ -23,12 +23,15 @@ import token
 #todo:
 # error checking
 #   completed multi digit
-#   check liveness/lines
-#   check equals sign
+#   completed liveness/lines
+#   completed equals sign
+#   completed empty liveness
+#   completed t multi digit
 #   check unary
 #   check single assignment
-#   check invalid var ! . %
-#   check invalid op
+#   completed invalid temp variable
+#   completed invalid var ! . %
+#   completed invalid op
 
 
 class intermediateLine:
@@ -45,7 +48,7 @@ class intermediateLine:
         print (self.op) 
         print (self.src2) 
 
-    def printTokenizedLine (self):
+    def printTokenizingdLine (self):
         self.dst.printToken()
         self.src1.printToken()
         self.op.printToken()
@@ -72,46 +75,69 @@ class intermediateLine:
 def formLine(line):
     line = line.replace(" ", "")
     dst, line = checkVar(line)
-    #check for equals
-    line = line[2:]
-    #check sign
-    src1, line = checkVar(line)
+    if (dst.getTag() == 7):
+        return 0
+    if (line[0] != '='):
+        print ("Error: Line missing equals sign")
+        return 0
     line = line[1:]
+    
+    src1, line = checkVar(line)
+    if (src1.getTag() == 7):
+        return 0
     op, line = checkOP(line)
+    if (op.getTag() == 7):
+        return 0
     #always go through src2
     src2, line = checkVar(line)
+    if (src2.getTag() == 7):
+        return 0
     return intermediateLine(dst, src1, op, src2) 
 
-#takes the first character and checks if it is a temp or a var
+# takes the first character and checks if it is a temp or a var
 # if temp check number identifier and assign it temp
 # if var assign var
 def checkVar(line):
     temp = line[0]
     #check if is not permitted
     if (temp == 't'):
-        var = token.token(3, line[1])
-        line = line[1:]
+        i = 1
+        temp = ''
+        while (i < len(line) and line[i].isnumeric()):
+            temp = temp + line[i]
+            i += 1
+        line = line[i:]
+        var = tokenizing.token(3, temp)
+        if (temp == ''):
+            print ("Error: Invalid Temporary Variable")
+            var = tokenizing.token(7, 0)
     elif (temp.isalpha()):
-        var = token.token(2, temp)
+        var = tokenizing.token(2, temp)
+        line = line[1:]
     elif (temp.isnumeric()):
         i = 1   #start after temp
         while (i < len(line) and line[i].isnumeric()):
             temp = temp + line[i]
             i += 1
-        var = token.token(1, temp)
-        i -= 1
+        var = tokenizing.token(1, temp)
         line = line[i:]
+    else: 
+        print ("Error: Invalid Operand")
+        var = tokenizing.token(7, 0)
     return var, line
 
 #a switch to check for which operator is being applied
 def checkOP(line):
     match line[0]:
         case "+":
-            op = token.token(0, 0)
+            op = tokenizing.token(0, 0)
         case "-":
-            op = token.token(0, 1)
+            op = tokenizing.token(0, 1)
         case "*":
-            op = token.token(0, 2)
+            op = tokenizing.token(0, 2)
         case "/":
-            op = token.token(0, 3)
+            op = tokenizing.token(0, 3)
+        case _:
+            print ("Error: Invalid Operator")
+            op = tokenizing.token(7, 0)
     return op, line[1:]

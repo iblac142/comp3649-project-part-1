@@ -1,0 +1,7 @@
+ADD R6, #1, #1111
+ADD R0, #1, R2
+ADD R5, R0, #1
+MUL 3, R6, #3
+SUB R1, R5, R4
+DIV 4, R1, #2
+ADD R3, #1, #1

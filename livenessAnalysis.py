@@ -1,4 +1,4 @@
-import token
+import tokenizing
 import intermediateLine
 
 #TODO: catch error for live variable not occuring in code
@@ -21,10 +21,10 @@ def setLiveness(lines, lives):
     # traverse from the bottom up
     for l in reversed(lines):
         # add each src to the currentLive set; their appearance indicate they are consumed following the instruction
-        if l.getSRC1().getTag() == token.VARIABLE or l.getSRC1().getTag() == token.TEMP:
+        if l.getSRC1().getTag() == tokenizing.VARIABLE or l.getSRC1().getTag() == tokenizing.TEMP:
             currentLive.add(l.getSRC1())
             varSet.add(l.getSRC1())
-        if l.getSRC2().getTag() == token.VARIABLE or l.getSRC2().getTag() == token.TEMP:
+        if l.getSRC2().getTag() == tokenizing.VARIABLE or l.getSRC2().getTag() == tokenizing.TEMP:
             currentLive.add(l.getSRC2())
             varSet.add(l.getSRC2())
         # set the intermediateLine's live variables to the current set of live variables
@@ -33,3 +33,24 @@ def setLiveness(lines, lives):
         # remove the destination from the list of current variables, as it has been defined 
         currentLive.discard(l.getDST())
     return varSet
+
+# Analyze input for correct syntax and break down live variables into a list
+# If syntax is incorrect return 0
+def liveness_check(liveness):
+    livenessCheck = liveness[:5]
+    liveness = liveness[5:]
+    if (livenessCheck != "live:"):
+        print ("Error: Last line is not in form live: ")
+        return 0
+
+    liveness = liveness.replace(" ", "")
+    operation = liveness.split(',')
+
+    liveVar = []
+    if (operation == ['']):
+        return liveVar
+    for var in operation:
+        t, empty = intermediateLine.checkVar(var)
+        liveVar.append(t)
+    
+    return liveVar

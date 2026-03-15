@@ -1,5 +1,4 @@
 import graph
-import token
 import itertools
 
 # takes a list of intermediateLines which have liveness applied
