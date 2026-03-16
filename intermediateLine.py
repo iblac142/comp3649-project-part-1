@@ -27,11 +27,12 @@ import tokenizing
 #   completed equals sign
 #   completed empty liveness
 #   completed t multi digit
-#   check unary
-#   check single assignment
+#   completed unary
+#   completed single assignment
 #   completed invalid temp variable
 #   completed invalid var ! . %
 #   completed invalid op
+#   can liveness be temporary
 
 INCLUDE_NONLITERAL = 0
 INCLUDE_LITERAL = 1
@@ -79,6 +80,8 @@ class intermediateLine:
 # Output: a intermediate line structure filled with corresponding tokens
 # After each process each processed segment will be sliced out
 # Return error code 0 in the case that syntax is incorrect
+# In the unary and simple assignment cases any aspects of the line not 
+# being used will be set as a token with the tag EMPTY
 def formLine(line):
     line = line.replace(" ", "")
     dst, line = checkVar(line, INCLUDE_NONLITERAL)
@@ -88,16 +91,19 @@ def formLine(line):
         print ("Error: Line missing equals sign")
         return 0
     line = line[1:]
-    #if (line[0] != '-'):
-    src1, line = checkVar(line, INCLUDE_LITERAL)
+    src1 = tokenizing.token(tokenizing.EMPTY, 0)
+    if (line[0] != '-'):
+        src1, line = checkVar(line, INCLUDE_LITERAL)
+        if (not line):
+            src2 = src1
+            src1 = tokenizing.token(tokenizing.EMPTY, 0)
+            op = tokenizing.token(tokenizing.EMPTY, 0)
+            return intermediateLine(dst, src1, op, src2) 
     if (src1.getTag() == tokenizing.ERROR):
         return 0
-    #else:
-    #src1 = 0
     op, line = checkOP(line)
     if (op.getTag() == tokenizing.ERROR):
         return 0
-    #always go through src2
     src2, line = checkVar(line, INCLUDE_LITERAL)
     if (src2.getTag() == tokenizing.ERROR):
         return 0
@@ -120,7 +126,7 @@ def checkVar(line, literal):
             i += 1
         line = line[i:]
         var = tokenizing.token(tokenizing.TEMP, temp)
-        if (temp == ''):
+        if (not temp):
             print ("Error: Invalid Temporary Variable")
             var = tokenizing.token(tokenizing.ERROR, 0)
     elif (temp.isalpha()):

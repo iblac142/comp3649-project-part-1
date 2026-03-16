@@ -29,6 +29,7 @@ DIV = 3
 # LIVE (5):      value is not used
 # NEWLINE (6):   value is not used
 # ERROR (7):     value is not used
+# EMPTY (8):
 #
 # the class has no additional methods and is only used to store information
 class token:
