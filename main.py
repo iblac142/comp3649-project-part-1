@@ -3,38 +3,19 @@ import livenessAnalysis
 import interference
 import graphColor
 import targetCode
-import sys
+import commandLine
 
 def main():
-    # QUICK FIX: allow filename and reg count from command line
-    # usage: python main.py <filename> <num_regs>
-    if len(sys.argv) < 3:
-        print("Usage: python main.py <num_regs> <filename>")
+    content, numRegs, filename = commandLine.processCommandLine()
+    if (content == 0):
         return
-    
-    if (not sys.argv[1].isdigit()):
-        print("Error: <num_regs> is not a positive integer")
-        return
-    if (int(sys.argv[1]) == 0):
-        print("Error: <num_regs> can't be 0")
-        return
-    
-    #arg 2 is a readable file
-    numRegs = int(sys.argv[1])
-    filename = sys.argv[2]
 
     try:
-        with open(filename) as file:
-            content = file.read()
-            file.close()
-            content = content.splitlines()
-    except FileNotFoundError:
-        print ("Error: file does not exist")
+        liveness = content.pop()
+        liveVar = livenessAnalysis.liveness_check(liveness)
+    except IndexError:
+        print ("Error: Empty File")
         return
-
-    liveness = content.pop()
-    liveVar = livenessAnalysis.liveness_check(liveness)
-
     if (liveVar == 0):
         print ("Liveness error")
         return
