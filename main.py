@@ -11,19 +11,32 @@ def main():
     if len(sys.argv) < 3:
         print("Usage: python main.py <num_regs> <filename>")
         return
-
+    
+    if (not sys.argv[1].isdigit()):
+        print("Error: <num_regs> is not a positive integer")
+        return
+    if (int(sys.argv[1]) == 0):
+        print("Error: <num_regs> can't be 0")
+        return
+    
+    #arg 2 is a readable file
     numRegs = int(sys.argv[1])
     filename = sys.argv[2]
 
-    file = open(filename)
-    content = file.read()
-    file.close()
-    content = content.splitlines()
+    try:
+        with open(filename) as file:
+            content = file.read()
+            file.close()
+            content = content.splitlines()
+    except FileNotFoundError:
+        print ("Error: file does not exist")
+        return
 
     liveness = content.pop()
     liveVar = livenessAnalysis.liveness_check(liveness)
 
     if (liveVar == 0):
+        print ("Liveness error")
         return
 
     tokenizedContent = []

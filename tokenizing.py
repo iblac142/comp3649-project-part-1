@@ -7,6 +7,7 @@ EQUALS = 4
 LIVE = 5
 NEWLINE = 6
 ERROR = 7
+EMPTY = 8
 
 # operation values
 ADD = 0

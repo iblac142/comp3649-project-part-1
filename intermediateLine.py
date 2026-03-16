@@ -33,6 +33,8 @@ import tokenizing
 #   completed invalid var ! . %
 #   completed invalid op
 
+INCLUDE_NONLITERAL = 0
+INCLUDE_LITERAL = 1
 
 class intermediateLine:
     def __init__ (self, dst, src1, op, src2):
@@ -68,36 +70,46 @@ class intermediateLine:
             print(i.getValue())
         print(",")
 
-  
 
-# takes in a line and creates corresponding intermediateLine
+# Takes in a line and creates corresponding intermediateLine
+# Input: a string in one of the forms:
+#       dst = src + src
+#       dst = -src
+#       dst = src 
+# Output: a intermediate line structure filled with corresponding tokens
 # After each process each processed segment will be sliced out
+# Return error code 0 in the case that syntax is incorrect
 def formLine(line):
     line = line.replace(" ", "")
-    dst, line = checkVar(line)
-    if (dst.getTag() == 7):
+    dst, line = checkVar(line, INCLUDE_NONLITERAL)
+    if (dst.getTag() == tokenizing.ERROR):
         return 0
     if (line[0] != '='):
         print ("Error: Line missing equals sign")
         return 0
     line = line[1:]
-    
-    src1, line = checkVar(line)
-    if (src1.getTag() == 7):
+    #if (line[0] != '-'):
+    src1, line = checkVar(line, INCLUDE_LITERAL)
+    if (src1.getTag() == tokenizing.ERROR):
         return 0
+    #else:
+    #src1 = 0
     op, line = checkOP(line)
-    if (op.getTag() == 7):
+    if (op.getTag() == tokenizing.ERROR):
         return 0
     #always go through src2
-    src2, line = checkVar(line)
-    if (src2.getTag() == 7):
+    src2, line = checkVar(line, INCLUDE_LITERAL)
+    if (src2.getTag() == tokenizing.ERROR):
         return 0
     return intermediateLine(dst, src1, op, src2) 
 
-# takes the first character and checks if it is a temp or a var
-# if temp check number identifier and assign it temp
-# if var assign var
-def checkVar(line):
+# Takes the first character and checks if it is a temp or a var
+# If temp check number identifier and assign it temp
+# If var assign var
+# Input: a string of one or more characters
+# Output: a token that corresponds to the characters given
+# Return token error in the case syntax is incorrect
+def checkVar(line, literal):
     temp = line[0]
     #check if is not permitted
     if (temp == 't'):
@@ -107,37 +119,41 @@ def checkVar(line):
             temp = temp + line[i]
             i += 1
         line = line[i:]
-        var = tokenizing.token(3, temp)
+        var = tokenizing.token(tokenizing.TEMP, temp)
         if (temp == ''):
             print ("Error: Invalid Temporary Variable")
-            var = tokenizing.token(7, 0)
+            var = tokenizing.token(tokenizing.ERROR, 0)
     elif (temp.isalpha()):
-        var = tokenizing.token(2, temp)
+        var = tokenizing.token(tokenizing.VARIABLE, temp)
         line = line[1:]
-    elif (temp.isnumeric()):
+    elif (temp.isnumeric() and literal == INCLUDE_LITERAL):
         i = 1   #start after temp
         while (i < len(line) and line[i].isnumeric()):
             temp = temp + line[i]
             i += 1
-        var = tokenizing.token(1, temp)
+        var = tokenizing.token(tokenizing.NUMBER, temp)
         line = line[i:]
     else: 
         print ("Error: Invalid Operand")
-        var = tokenizing.token(7, 0)
+        var = tokenizing.token(tokenizing.ERROR, 0)
     return var, line
 
-#a switch to check for which operator is being applied
+# A switch to check for which operator is being applied
+# Reads only the first character of a string
+# Checks if character is a valid operation
+# If invalid return token error
+# Otherwise return corresponding operation token
 def checkOP(line):
     match line[0]:
         case "+":
-            op = tokenizing.token(0, 0)
+            op = tokenizing.token(tokenizing.OPERATION, tokenizing.ADD)
         case "-":
-            op = tokenizing.token(0, 1)
+            op = tokenizing.token(tokenizing.OPERATION, tokenizing.SUB)
         case "*":
-            op = tokenizing.token(0, 2)
+            op = tokenizing.token(tokenizing.OPERATION, tokenizing.MUL)
         case "/":
-            op = tokenizing.token(0, 3)
+            op = tokenizing.token(tokenizing.OPERATION, tokenizing.DIV)
         case _:
             print ("Error: Invalid Operator")
-            op = tokenizing.token(7, 0)
+            op = tokenizing.token(tokenizing.ERROR, 0)
     return op, line[1:]

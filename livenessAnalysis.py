@@ -35,6 +35,8 @@ def setLiveness(lines, lives):
     return varSet
 
 # Analyze input for correct syntax and break down live variables into a list
+# Input: takes in a string in the form "live: <var>" there can be zero or more <var>
+# Output: returns a list of <var>
 # If syntax is incorrect return 0
 def liveness_check(liveness):
     livenessCheck = liveness[:5]
@@ -50,7 +52,9 @@ def liveness_check(liveness):
     if (operation == ['']):
         return liveVar
     for var in operation:
-        t, empty = intermediateLine.checkVar(var)
+        t, empty = intermediateLine.checkVar(var, intermediateLine.INCLUDE_NONLITERAL)
+        if (t.getTag() == tokenizing.ERROR):
+            return 0
         liveVar.append(t)
-    
+
     return liveVar
