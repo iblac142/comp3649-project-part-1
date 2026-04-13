@@ -1,4 +1,4 @@
-# COMP 3649 Project Part 1 — Register Allocating Code Generator
+# COMP 3649 Project Part 1 — Register Allocating Code Generator (Python)
 
 **Authors:** Daksh Thawani, Iain Black, Vincent Ha
 
