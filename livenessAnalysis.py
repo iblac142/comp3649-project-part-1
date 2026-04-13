@@ -13,6 +13,7 @@ def setLiveness(lines, lives):
     # create empty sets; one for what variables are currently live, and one for all variables used
     currentLive = set()
     varSet = set()
+    usedSet = set()
     # add the final live variables to both sets
     for v in lives:
         currentLive.add(v)
@@ -24,14 +25,22 @@ def setLiveness(lines, lives):
         if l.getSRC1().getTag() == tokenizing.VARIABLE or l.getSRC1().getTag() == tokenizing.TEMP:
             currentLive.add(l.getSRC1())
             varSet.add(l.getSRC1())
+            usedSet.add(l.getSRC1())
         if l.getSRC2().getTag() == tokenizing.VARIABLE or l.getSRC2().getTag() == tokenizing.TEMP:
             currentLive.add(l.getSRC2())
             varSet.add(l.getSRC2())
+            usedSet.add(l.getSRC2())
         # set the intermediateLine's live variables to the current set of live variables
         for i in currentLive:
             l.liveness.add(i)
         # remove the destination from the list of current variables, as it has been defined 
         currentLive.discard(l.getDST())
+        usedSet.add(l.getDST())
+    
+    for v in varSet:
+        if not (v in usedSet):
+            return 0
+    
     return varSet
 
 # Analyze input for correct syntax and break down live variables into a list

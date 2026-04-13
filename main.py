@@ -17,7 +17,7 @@ def main():
         print ("Error: Empty File")
         return
     if (liveVar == 0):
-        print ("Liveness error")
+        print ("Error: Liveness error")
         return
 
     tokenizedContent = []
@@ -27,7 +27,14 @@ def main():
             return
         tokenizedContent.append(temp)
 
-    varSet = list(livenessAnalysis.setLiveness(tokenizedContent, liveVar))
+    varSet = livenessAnalysis.setLiveness(tokenizedContent, liveVar)
+    
+    if (varSet == 0):
+        print("Error: At least one live variable does not occur in the code")
+        return
+        
+    varSet = list(varSet)
+
     intGraph = interference.createInterferenceGraph(tokenizedContent, varSet)
 
     # print interference table
