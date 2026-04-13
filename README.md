@@ -148,4 +148,5 @@ Variables live on entry are loaded first (`MOV varname, Rx`). Variables live on 
 | `livenessAnalysis.py` | Functions to get and check liveness of variables |
 | `targetCode.py` | Functions to generate machine code |
 | `tokenizing.py` | Class definition representing a single token |
+| `testLivenessAnalysis.py` | Small module to run testing on liveness|
 | `test(1-4).txt` | Sample input files
